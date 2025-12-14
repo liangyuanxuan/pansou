@@ -52,6 +52,17 @@ type Config struct {
 	AuthUsers       map[string]string // 用户名:密码映射
 	AuthTokenExpiry time.Duration     // Token有效期
 	AuthJWTSecret   string            // JWT签名密钥
+	// MySQL数据库配置
+	DBEnabled  bool   // 是否启用数据库
+	DBHost     string // 数据库主机
+	DBPort     string // 数据库端口
+	DBUser     string // 数据库用户名
+	DBPassword string // 数据库密码
+	DBName     string // 数据库名称
+	DBMaxIdle  int    // 最大空闲连接数
+	DBMaxOpen  int    // 最大打开连接数
+	// 全文搜索配置
+	DBUseFulltext bool // 是否优先使用全文搜索（默认false，使用精确+模糊搜索）
 
 }
 
@@ -63,7 +74,7 @@ func Init() {
 	proxyURL := getProxyURL()
 	pluginTimeoutSeconds := getPluginTimeout()
 	asyncResponseTimeoutSeconds := getAsyncResponseTimeout()
-	
+
 	AppConfig = &Config{
 		DefaultChannels:    getDefaultChannels(),
 		DefaultConcurrency: getDefaultConcurrency(),
@@ -105,9 +116,17 @@ func Init() {
 		AuthUsers:       getAuthUsers(),
 		AuthTokenExpiry: getAuthTokenExpiry(),
 		AuthJWTSecret:   getAuthJWTSecret(),
-
+		// MySQL数据库配置
+		DBEnabled:  getDBEnabled(),
+		DBHost:     getDBHost(),
+		DBPort:     getDBPort(),
+		DBUser:     getDBUser(),
+		DBPassword: getDBPassword(),
+		DBName:     getDBName(),
+		DBMaxIdle:  getDBMaxIdle(),
+		DBMaxOpen:  getDBMaxOpen(),
 	}
-	
+
 	// 应用GC配置
 	applyGCSettings()
 }
@@ -130,11 +149,11 @@ func getDefaultConcurrency() int {
 			return concurrency
 		}
 	}
-	
+
 	// 环境变量未设置或无效，使用基于环境变量的简单计算
 	// 计算频道数
 	channelCount := len(getDefaultChannels())
-	
+
 	// 估计插件数（从环境变量或默认值，实际在应用启动后会根据真实插件数调整）
 	pluginCountEnv := os.Getenv("PLUGIN_COUNT")
 	pluginCount := 0
@@ -144,18 +163,18 @@ func getDefaultConcurrency() int {
 			pluginCount = count
 		}
 	}
-	
+
 	// 如果没有指定插件数，默认使用7个（当前已知的插件数）
 	if pluginCount == 0 {
 		pluginCount = 7
 	}
-	
+
 	// 计算并发数 = 频道数 + 插件数 + 10
 	concurrency := channelCount + pluginCount + 10
 	if concurrency < 1 {
 		concurrency = 1 // 确保至少为1
 	}
-	
+
 	return concurrency
 }
 
@@ -165,22 +184,22 @@ func UpdateDefaultConcurrency(pluginCount int) {
 	if AppConfig == nil {
 		return
 	}
-	
+
 	// 只有当未通过环境变量指定并发数时才进行调整
 	concurrencyEnv := os.Getenv("CONCURRENCY")
 	if concurrencyEnv != "" {
 		return
 	}
-	
+
 	// 计算频道数
 	channelCount := len(AppConfig.DefaultChannels)
-	
+
 	// 计算并发数 = 频道数 + 插件数（插件禁用时为0）+ 10
 	concurrency := channelCount + pluginCount + 10
 	if concurrency < 1 {
 		concurrency = 1 // 确保至少为1
 	}
-	
+
 	// 更新配置
 	AppConfig.DefaultConcurrency = concurrency
 }
@@ -189,7 +208,7 @@ func UpdateDefaultConcurrency(pluginCount int) {
 func getPort() string {
 	port := os.Getenv("PORT")
 	if port == "" {
-		return "8888"
+		return "8889"
 	}
 	return port
 }
@@ -337,12 +356,12 @@ func getEnabledPlugins() []string {
 		// 未设置环境变量时返回nil，表示不启用任何插件
 		return nil
 	}
-	
+
 	if plugins == "" {
 		// 设置为空字符串，也表示不启用任何插件
 		return []string{}
 	}
-	
+
 	// 按逗号分割插件名
 	result := make([]string, 0)
 	for _, plugin := range strings.Split(plugins, ",") {
@@ -351,7 +370,7 @@ func getEnabledPlugins() []string {
 			result = append(result, plugin)
 		}
 	}
-	
+
 	return result
 }
 
@@ -377,17 +396,17 @@ func getAsyncMaxBackgroundWorkers() int {
 			return size
 		}
 	}
-	
+
 	// 自动计算：根据CPU核心数计算
 	// 每个CPU核心分配5个工作者，最小20个
 	cpuCount := runtime.NumCPU()
 	workers := cpuCount * 5
-	
+
 	// 确保至少有20个工作者
 	if workers < 20 {
 		workers = 20
 	}
-	
+
 	return workers
 }
 
@@ -400,16 +419,16 @@ func getAsyncMaxBackgroundTasks() int {
 			return size
 		}
 	}
-	
+
 	// 自动计算：工作者数量的5倍，最小100个
 	workers := getAsyncMaxBackgroundWorkers()
 	tasks := workers * 5
-	
+
 	// 确保至少有100个任务
 	if tasks < 100 {
 		tasks = 100
 	}
-	
+
 	return tasks
 }
 
@@ -435,20 +454,20 @@ func getHTTPReadTimeout() time.Duration {
 			return time.Duration(timeout) * time.Second
 		}
 	}
-	
+
 	// 自动计算：默认30秒，异步模式下根据异步响应超时调整
 	timeout := 30 * time.Second
-	
+
 	// 如果启用了异步插件，确保读取超时足够长
 	if getAsyncPluginEnabled() {
 		// 读取超时应该至少是异步响应超时的3倍，确保有足够时间完成异步操作
 		asyncTimeoutSecs := getAsyncResponseTimeout()
-		asyncTimeoutExtended := time.Duration(asyncTimeoutSecs * 3) * time.Second
+		asyncTimeoutExtended := time.Duration(asyncTimeoutSecs*3) * time.Second
 		if asyncTimeoutExtended > timeout {
 			timeout = asyncTimeoutExtended
 		}
 	}
-	
+
 	return timeout
 }
 
@@ -461,20 +480,20 @@ func getHTTPWriteTimeout() time.Duration {
 			return time.Duration(timeout) * time.Second
 		}
 	}
-	
+
 	// 自动计算：默认60秒，但根据插件超时和异步处理时间调整
 	timeout := 60 * time.Second
-	
+
 	// 如果启用了异步插件，确保写入超时足够长
 	pluginTimeoutSecs := getPluginTimeout()
-	
+
 	// 计算1.5倍的插件超时时间（使用整数运算：乘以3再除以2）
-	pluginTimeoutExtended := time.Duration(pluginTimeoutSecs * 3 / 2) * time.Second
-	
+	pluginTimeoutExtended := time.Duration(pluginTimeoutSecs*3/2) * time.Second
+
 	if pluginTimeoutExtended > timeout {
 		timeout = pluginTimeoutExtended
 	}
-	
+
 	return timeout
 }
 
@@ -487,7 +506,7 @@ func getHTTPIdleTimeout() time.Duration {
 			return time.Duration(timeout) * time.Second
 		}
 	}
-	
+
 	// 自动计算：默认120秒，考虑到保持连接的效益
 	return 120 * time.Second
 }
@@ -501,17 +520,17 @@ func getHTTPMaxConns() int {
 			return maxConns
 		}
 	}
-	
+
 	// 自动计算：根据CPU核心数计算
 	// 每个CPU核心分配200个连接，最小1000个
 	cpuCount := runtime.NumCPU()
 	maxConns := cpuCount * 200
-	
+
 	// 确保至少有1000个连接
 	if maxConns < 1000 {
 		maxConns = 1000
 	}
-	
+
 	return maxConns
 }
 
@@ -540,7 +559,7 @@ func getAuthUsers() map[string]string {
 	if usersEnv == "" {
 		return nil
 	}
-	
+
 	users := make(map[string]string)
 	pairs := strings.Split(usersEnv, ",")
 	for _, pair := range pairs {
@@ -589,7 +608,7 @@ func getAuthJWTSecret() string {
 func applyGCSettings() {
 	// 设置GC百分比
 	debug.SetGCPercent(AppConfig.GCPercent)
-	
+
 	// 如果启用内存优化
 	if AppConfig.OptimizeMemory {
 		// 释放操作系统内存
@@ -597,4 +616,79 @@ func applyGCSettings() {
 	}
 }
 
- 
+// 从环境变量获取数据库开关，如果未设置则默认关闭
+func getDBEnabled() bool {
+	//enabled := os.Getenv("DB_ENABLED")
+	return true //enabled == "true" || enabled == "1"
+}
+
+// 从环境变量获取数据库主机，如果未设置则使用默认值
+func getDBHost() string {
+	host := os.Getenv("DB_HOST")
+	if host == "" {
+		return "localhost"
+	}
+	return host
+}
+
+// 从环境变量获取数据库端口，如果未设置则使用默认值
+func getDBPort() string {
+	port := os.Getenv("DB_PORT")
+	if port == "" {
+		return "3306"
+	}
+	return port
+}
+
+// 从环境变量获取数据库用户名，如果未设置则使用默认值
+func getDBUser() string {
+	user := os.Getenv("DB_USER")
+	if user == "" {
+		return "root"
+	}
+	return user
+}
+
+// 从环境变量获取数据库密码
+func getDBPassword() string {
+	password := os.Getenv("DB_PASSWORD")
+	if password == "" {
+		return ""
+	}
+	return password
+}
+
+// 从环境变量获取数据库名称，如果未设置则使用默认值
+func getDBName() string {
+	dbName := os.Getenv("DB_NAME")
+	if dbName == "" {
+		return "pansou"
+	}
+	return dbName
+}
+
+// 从环境变量获取最大空闲连接数，如果未设置则使用默认值
+func getDBMaxIdle() int {
+	maxIdleEnv := os.Getenv("DB_MAX_IDLE")
+	if maxIdleEnv == "" {
+		return 10
+	}
+	maxIdle, err := strconv.Atoi(maxIdleEnv)
+	if err != nil || maxIdle <= 0 {
+		return 10
+	}
+	return maxIdle
+}
+
+// 从环境变量获取最大打开连接数，如果未设置则使用默认值
+func getDBMaxOpen() int {
+	maxOpenEnv := os.Getenv("DB_MAX_OPEN")
+	if maxOpenEnv == "" {
+		return 100
+	}
+	maxOpen, err := strconv.Atoi(maxOpenEnv)
+	if err != nil || maxOpen <= 0 {
+		return 100
+	}
+	return maxOpen
+}
