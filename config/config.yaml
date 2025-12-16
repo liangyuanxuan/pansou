@@ -1,0 +1,34 @@
+port: 8080
+default_channels:
+  - "stable"
+default_concurrency: 10
+proxy_url: ""
+http_proxy_url: ""
+https_proxy_url: ""
+cache_enabled: true
+cache_path: "./cache"
+cache_max_size_mb: 512
+cache_ttl_minutes: 30
+enable_compression: true
+min_size_to_compress: 1024
+gc_percent: 100
+optimize_memory: false
+plugin_timeout_seconds: 30
+plugin_timeout: 300
+async_plugin_enabled:
+enabled_plugins:
+async_response_timeout:
+async_response_timeout_dur:
+async_max_background_workers: 20 # 最大后台工作者数量最少20个
+async_max_background_tasks: 1
+async_cache_ttl_hours: 1
+async_log_enabled:
+http_read_timeout:
+http_write_timeout: 600000000000
+http_idle_timeout: 60
+http_max_conns: 10
+auth_enabled: true
+auth_users:
+  admin:admin123
+auth_token_expiry: 86400000000000
+auth_jwt_secret: 818be2a677d0ff6fa9f4c645e1ec53b0ab7753c5ef67fabab69ce3d81820543f
