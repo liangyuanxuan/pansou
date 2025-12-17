@@ -1,6 +1,8 @@
 package config
 
 import (
+	"database/sql"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -9,6 +11,7 @@ import (
 	"strconv"
 	"time"
 
+	_ "github.com/go-sql-driver/mysql" // 驱动
 	"gopkg.in/yaml.v3"
 )
 
@@ -54,11 +57,23 @@ type Config struct {
 	AuthUsers       map[string]string `yaml:"auth_users"`        // 用户名:密码映射
 	AuthTokenExpiry time.Duration     `yaml:"auth_token_expiry"` // Token有效期
 	AuthJWTSecret   string            `yaml:"auth_jwt_secret"`   // JWT签名密钥
-
+	DB              struct {
+		Host      string `yaml:"host"`
+		Port      int    `yaml:"port"`
+		User      string `yaml:"user"`
+		Password  string `yaml:"password"`
+		Database  string `yaml:"database"`
+		Charset   string `yaml:"charset"`
+		ParseTime bool   `yaml:"parseTime"`
+		Loc       string `yaml:"loc"`
+	} `yaml:"db"`
 }
 
 // 全局配置实例
-var AppConfig *Config
+var (
+	AppConfig *Config
+	DB        *sql.DB
+)
 
 func InitConfigFromFile(path string) (*Config, error) {
 	raw, err := os.ReadFile(path)
@@ -84,12 +99,40 @@ func InitConfigFromFile(path string) (*Config, error) {
 	return c, nil
 }
 
-// 初始化配置
+func InitDB(cfg *Config) error {
+	// 1. 拼 DSN
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=%t&loc=%s",
+		cfg.DB.User,
+		cfg.DB.Password,
+		cfg.DB.Host,
+		cfg.DB.Port,
+		cfg.DB.Database,
+		cfg.DB.Charset,
+		cfg.DB.ParseTime,
+		cfg.DB.Loc,
+	)
+
+	// 2. 打开连接
+	var err error
+	DB, err = sql.Open("mysql", dsn)
+	if err != nil {
+		return err
+	}
+	// 3. 验证连通性
+	return DB.Ping()
+}
+
+// Init 初始化配置
 func Init() {
 	var err error
 	AppConfig, err = InitConfigFromFile("config/config.yaml") // 或从 flag 读取路径
 	if err != nil {
 		log.Fatalf("load config.yaml: %v", err)
+	}
+
+	// 数据库链接
+	if err := InitDB(AppConfig); err != nil {
+		log.Fatalf("init db: %v", err)
 	}
 
 	// 应用GC配置

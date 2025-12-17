@@ -29,6 +29,15 @@ http_idle_timeout: 120s # HTTP空闲超时
 http_max_conns: 100 # HTTP最大连接数
 auth_enabled: true  # 认证开关
 auth_users: # 用户配置，格式：user1:pass1,user2:pass2
-  admin:admin123
-auth_token_expiry: 24 # Token有效期（小时）
+  admin: admin123
+auth_token_expiry: 24h # Token有效期（小时）
 auth_jwt_secret: 818be2a677d0ff6fa9f4c645e1ec53b0ab7753c5ef67fabab69ce3d81820543f # JWT密钥
+db:
+  host: 127.0.0.1 # 数据库地址
+  port: 3306 # 数据库端口
+  user: root # 数控账号
+  password:  # 数据库密码
+  database: pansou # 数据库
+  charset: utf8mb4
+  parseTime: true
+  loc: Local
