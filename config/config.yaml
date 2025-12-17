@@ -6,29 +6,29 @@ proxy_url: ""
 http_proxy_url: ""
 https_proxy_url: ""
 cache_enabled: true
-cache_path: "./cache"
+cache_path: "./cache" # 缓存路径
 cache_max_size_mb: 512
-cache_ttl_minutes: 30
-enable_compression: true
-min_size_to_compress: 1024
-gc_percent: 100
-optimize_memory: false
-plugin_timeout_seconds: 30
-plugin_timeout: 300
-async_plugin_enabled:
-enabled_plugins:
-async_response_timeout:
-async_response_timeout_dur:
-async_max_background_workers: 20 # 最大后台工作者数量最少20个
-async_max_background_tasks: 1
-async_cache_ttl_hours: 1
-async_log_enabled:
-http_read_timeout:
-http_write_timeout: 600000000000
-http_idle_timeout: 60
-http_max_conns: 10
-auth_enabled: true
-auth_users:
+cache_ttl_minutes: 60
+enable_compression: true # 启用压缩，如果未设置则默认禁用
+min_size_to_compress: 1024 # 最小压缩大小
+gc_percent: 50 #GC百分比
+optimize_memory: true #是否优化内存，如果未设置则默认启用
+plugin_timeout_seconds: 30 #获取插件超时时间（秒），如果未设置则使用默认值
+plugin_timeout: 30s
+async_plugin_enabled: true # 是否启用异步插件，如果未设置则默认启用
+# enabled_plugins:  #启用的具体插件列表 （空表示启用所有）
+async_response_timeout: 4 # 异步响应超时时间（秒）
+# async_response_timeout_dur:
+async_max_background_workers: 20 # 最大后台工作者数量，如果未设置则自动计算
+async_max_background_tasks: 1 # 最大后台任务数量，如果未设置则自动计算
+async_cache_ttl_hours: 1 # 异步缓存有效期（小时），如果未设置则使用默认值
+async_log_enabled: true # 异步插件日志开关
+http_read_timeout: 30s # HTTP读取超时
+http_write_timeout: 60s # HTTP写入超时
+http_idle_timeout: 120s # HTTP空闲超时
+http_max_conns: 100 # HTTP最大连接数
+auth_enabled: true  # 认证开关
+auth_users: # 用户配置，格式：user1:pass1,user2:pass2
   admin:admin123
-auth_token_expiry: 86400000000000
-auth_jwt_secret: 818be2a677d0ff6fa9f4c645e1ec53b0ab7753c5ef67fabab69ce3d81820543f
+auth_token_expiry: 24 # Token有效期（小时）
+auth_jwt_secret: 818be2a677d0ff6fa9f4c645e1ec53b0ab7753c5ef67fabab69ce3d81820543f # JWT密钥
