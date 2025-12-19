@@ -1,7 +1,7 @@
 package config
 
 import (
-	"database/sql"
+	_ "database/sql"
 	"fmt"
 	"log"
 	"os"
@@ -13,6 +13,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql" // 驱动
 	"gopkg.in/yaml.v3"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 )
 
 // Config 应用配置结构
@@ -72,7 +74,7 @@ type Config struct {
 // 全局配置实例
 var (
 	AppConfig *Config
-	DB        *sql.DB
+	DB        *gorm.DB
 )
 
 func InitConfigFromFile(path string) (*Config, error) {
@@ -114,12 +116,31 @@ func InitDB(cfg *Config) error {
 
 	// 2. 打开连接
 	var err error
-	DB, err = sql.Open("mysql", dsn)
+	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		return fmt.Errorf("gorm open: %w", err)
+	}
+
+	// 取出底层 *sql.DB 设置连接池
+	sqlDB, err := DB.DB()
+	if err != nil {
+		return fmt.Errorf("get sql.DB: %w", err)
+	}
+
+	// 连接池参数（可按需挪到 YAML）
+	sqlDB.SetMaxOpenConns(100)                 // 最大连接数
+	sqlDB.SetMaxIdleConns(20)                  // 最大空闲连接
+	sqlDB.SetConnMaxLifetime(30 * time.Minute) // 连接最长生命周期
+	sqlDB.SetConnMaxIdleTime(10 * time.Minute) // 空闲连接最大存活时间
+
+	return sqlDB.Ping() // 验证连通性
+
+	/*DB, err = sql.Open("mysql", dsn)
 	if err != nil {
 		return err
 	}
 	// 3. 验证连通性
-	return DB.Ping()
+	return DB.Ping()*/
 }
 
 // Init 初始化配置
