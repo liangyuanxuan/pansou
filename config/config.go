@@ -8,7 +8,6 @@ import (
 	"path/filepath"
 	"runtime"
 	"runtime/debug"
-	"strconv"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql" // 驱动
@@ -198,41 +197,6 @@ func getCachePath(path string) string {
 		return defaultPath
 	}
 	return path
-}
-
-// 从环境变量获取插件超时时间（秒），如果未设置则使用默认值
-func getPluginTimeout() int {
-	timeoutEnv := os.Getenv("PLUGIN_TIMEOUT")
-	if timeoutEnv == "" {
-		return 30 // 默认30秒
-	}
-	timeout, err := strconv.Atoi(timeoutEnv)
-	if err != nil || timeout <= 0 {
-		return 30
-	}
-	return timeout
-}
-
-// 从环境变量获取是否启用异步插件，如果未设置则默认启用
-func getAsyncPluginEnabled() bool {
-	enabled := os.Getenv("ASYNC_PLUGIN_ENABLED")
-	if enabled == "" {
-		return true // 默认启用
-	}
-	return enabled != "false" && enabled != "0"
-}
-
-// 从环境变量获取异步响应超时时间（秒），如果未设置则使用默认值
-func getAsyncResponseTimeout() int {
-	timeoutEnv := os.Getenv("ASYNC_RESPONSE_TIMEOUT")
-	if timeoutEnv == "" {
-		return 4 // 默认4秒
-	}
-	timeout, err := strconv.Atoi(timeoutEnv)
-	if err != nil || timeout <= 0 {
-		return 4
-	}
-	return timeout
 }
 
 // 从环境变量获取最大后台工作者数量，如果未设置则自动计算

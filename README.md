@@ -60,7 +60,7 @@ docker-compose logs -f
 ##### 直接使用Docker命令
 
 ```bash
-docker run -d --name pansou -p 8888:8888 ghcr.io/fish2018/pansou:latest
+docker run -d --name pansou -p 8889:8889 ghcr.io/fish2018/pansou:latest
 ```
 
 ##### 使用Docker Compose（推荐）
@@ -73,7 +73,7 @@ curl -o docker-compose.yml  https://raw.githubusercontent.com/fish2018/pansou/re
 docker-compose up -d
 
 # 访问服务
-http://localhost:8888
+http://localhost:8889
 ```
 
 ### 从源码安装
@@ -96,7 +96,7 @@ cd pansou
 
 | 环境变量 | 描述 | 默认值 | 说明 |
 |----------|------|--------|------|
-| **PORT** | 服务端口 | `8888` | 修改服务监听端口 |
+| **PORT** | 服务端口 | `8889` | 修改服务监听端口 |
 | **PROXY** | SOCKS5代理 | 无 | 如：`PROXY=socks5://127.0.0.1:1080` |
 | **HTTPS_PROXY/HTTP_PROXY** | HTTPS/HTTP代理 | 无 | 如：`HTTPS_PROXY=http://127.0.0.1:1080`,`HTTP_PROXY=http://127.0.0.1:1080` |
 | **CHANNELS** | 默认搜索的TG频道 | `tgsearchers3` | 多个频道用逗号分隔 |
@@ -117,14 +117,14 @@ PanSou支持可选的安全认证功能，默认关闭。开启后，所有API�
 
 ```bash
 # 启用认证并配置单个用户
-docker run -d --name pansou -p 8888:8888 \
+docker run -d --name pansou -p 8889:8889 \
   -e AUTH_ENABLED=true \
   -e AUTH_USERS=admin:admin123 \
   -e AUTH_TOKEN_EXPIRY=24 \
   ghcr.io/fish2018/pansou:latest
 
 # 配置多个用户
-docker run -d --name pansou -p 8888:8888 \
+docker run -d --name pansou -p 8889:8889 \
   -e AUTH_ENABLED=true \
   -e AUTH_USERS=admin:pass123,user1:pass456,user2:pass789 \
   ghcr.io/fish2018/pansou:latest
@@ -140,14 +140,14 @@ docker run -d --name pansou -p 8888:8888 \
 
 ```bash
 # 1. 登录获取Token
-curl -X POST http://localhost:8888/api/auth/login \
+curl -X POST http://localhost:8889/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 
 # 响应：{"token":"eyJhbGc...","expires_at":1234567890,"username":"admin"}
 
 # 2. 使用Token调用搜索API
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Authorization: Bearer eyJhbGc..." \
   -H "Content-Type: application/json" \
   -d '{"kw":"速度与激情"}'
@@ -202,7 +202,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-s -w -extldflags '-sta
 
 ```
 [program:pansou]
-environment=PORT=8888,CHANNELS="tgsearchers4,Aliyun_4K_Movies,bdbdndn11,yunpanx,bsbdbfjfjff,yp123pan,sbsbsnsqq,yunpanxunlei,tianyifc,BaiduCloudDisk,txtyzy,peccxinpd,gotopan,PanjClub,kkxlzy,baicaoZY,MCPH01,bdwpzhpd,ysxb48,jdjdn1111,yggpan,MCPH086,zaihuayun,Q66Share,Oscar_4Kmovies,ucwpzy,shareAliyun,alyp_1,dianyingshare,Quark_Movies,XiangxiuNBB,ydypzyfx,ucquark,xx123pan,yingshifenxiang123,zyfb123,tyypzhpd,tianyirigeng,cloudtianyi,hdhhd21,Lsp115,oneonefivewpfx,qixingzhenren,taoxgzy,Channel_Shares_115,tyysypzypd,vip115hot,wp123zy,yunpan139,yunpan189,yunpanuc,yydf_hzl,leoziyuan,pikpakpan,Q_dongman,yoyokuakeduanju",ENABLED_PLUGINS="labi,zhizhen,shandian,duoduo,muou"
+environment=PORT=8889,CHANNELS="tgsearchers4,Aliyun_4K_Movies,bdbdndn11,yunpanx,bsbdbfjfjff,yp123pan,sbsbsnsqq,yunpanxunlei,tianyifc,BaiduCloudDisk,txtyzy,peccxinpd,gotopan,PanjClub,kkxlzy,baicaoZY,MCPH01,bdwpzhpd,ysxb48,jdjdn1111,yggpan,MCPH086,zaihuayun,Q66Share,Oscar_4Kmovies,ucwpzy,shareAliyun,alyp_1,dianyingshare,Quark_Movies,XiangxiuNBB,ydypzyfx,ucquark,xx123pan,yingshifenxiang123,zyfb123,tyypzhpd,tianyirigeng,cloudtianyi,hdhhd21,Lsp115,oneonefivewpfx,qixingzhenren,taoxgzy,Channel_Shares_115,tyysypzypd,vip115hot,wp123zy,yunpan139,yunpan189,yunpanuc,yydf_hzl,leoziyuan,pikpakpan,Q_dongman,yoyokuakeduanju",ENABLED_PLUGINS="labi,zhizhen,shandian,duoduo,muou"
 command=/home/work/pansou/pansou
 directory=/home/work/pansou
 autostart=true
@@ -253,7 +253,7 @@ server {
         # 当超过限制时返回 429 状态码
         limit_req_status 429;
 
-        proxy_pass http://127.0.0.1:8888;
+        proxy_pass http://127.0.0.1:8889;
         proxy_set_header Host $host;
         proxy_set_header X-Real-IP $remote_addr;
         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
@@ -284,12 +284,12 @@ Authorization: Bearer <your-jwt-token>
 **示例**：
 ```bash
 # 未启用认证时
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Content-Type: application/json" \
   -d '{"kw":"速度与激情"}'
 
 # 启用认证时
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer eyJhbGc..." \
   -d '{"kw":"速度与激情"}'
@@ -315,7 +315,7 @@ curl -X POST http://localhost:8888/api/search \
 
 **请求示例**：
 ```bash
-curl -X POST http://localhost:8888/api/auth/login \
+curl -X POST http://localhost:8889/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"username":"admin","password":"admin123"}'
 ```
@@ -346,7 +346,7 @@ curl -X POST http://localhost:8888/api/auth/login \
 
 **请求示例**：
 ```bash
-curl -X POST http://localhost:8888/api/auth/verify \
+curl -X POST http://localhost:8889/api/auth/verify \
   -H "Authorization: Bearer eyJhbGc..."
 ```
 
@@ -368,7 +368,7 @@ curl -X POST http://localhost:8888/api/auth/verify \
 
 **请求示例**：
 ```bash
-curl -X POST http://localhost:8888/api/auth/logout
+curl -X POST http://localhost:8889/api/auth/logout
 ```
 
 **成功响应**：
@@ -421,7 +421,7 @@ curl -X POST http://localhost:8888/api/auth/logout
 
 ```bash
 # 未启用认证
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Content-Type: application/json" \
   -d '{
     "kw": "速度与激情",
@@ -439,7 +439,7 @@ curl -X POST http://localhost:8888/api/search \
   }'
 
 # 启用认证时（需要添加Authorization头）
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." \
   -d '{
@@ -448,7 +448,7 @@ curl -X POST http://localhost:8888/api/search \
   }'
 
 # 使用过滤器（只返回包含“合集”或“全集”，且不包含“预告”或“花絮”的结果）
-curl -X POST http://localhost:8888/api/search \
+curl -X POST http://localhost:8889/api/search \
   -H "Content-Type: application/json" \
   -d '{
     "kw": "唐朝诡事录",
@@ -463,14 +463,14 @@ curl -X POST http://localhost:8888/api/search \
 
 ```bash
 # 未启用认证
-curl "http://localhost:8888/api/search?kw=速度与激情&res=merge&src=tg"
+curl "http://localhost:8889/api/search?kw=速度与激情&res=merge&src=tg"
 
 # 启用认证时（需要添加Authorization头）
-curl "http://localhost:8888/api/search?kw=速度与激情&res=merge" \
+curl "http://localhost:8889/api/search?kw=速度与激情&res=merge" \
   -H "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 
 # 使用过滤器（GET方式需要URL编码JSON）
-curl "http://localhost:8888/api/search?kw=唐朝诡事录&filter=%7B%22include%22%3A%5B%22合集%22%2C%22全集%22%5D%2C%22exclude%22%3A%5B%22预告%22%5D%7D"
+curl "http://localhost:8889/api/search?kw=唐朝诡事录&filter=%7B%22include%22%3A%5B%22合集%22%2C%22全集%22%5D%2C%22exclude%22%3A%5B%22预告%22%5D%7D"
 ```
 
 **成功响应**：
@@ -602,7 +602,7 @@ curl "http://localhost:8888/api/search?kw=唐朝诡事录&filter=%7B%22include%2
 
 **请求示例**：
 ```bash
-curl http://localhost:8888/api/health
+curl http://localhost:8889/api/health
 ```
 
 **成功响应**：
@@ -652,7 +652,3 @@ curl http://localhost:8888/api/health
 ## 📄 许可证
 
 本项目采用 MIT 许可证。详情请见 [LICENSE](LICENSE) 文件。
-
-## ⭐ Star 历史
-
-[![Star History Chart](https://api.star-history.com/svg?repos=fish2018/pansou&type=Date)](https://star-history.com/#fish2018/pansou&Date)

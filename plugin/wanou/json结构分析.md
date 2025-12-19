@@ -63,7 +63,7 @@
     "vod_down_from": "bd$$$KG$$$UC",           // 下载源标识（用$$$分隔）
     "vod_down_server": "no$$$no$$$no",        // 服务器标识
     "vod_down_note": "$$$$$$",                // 下载备注
-    "vod_down_url": "https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8888$$$https://pan.quark.cn/s/0fe46ed6eefc$$$https://drive.uc.cn/s/d83caf5d4fb74"
+    "vod_down_url": "https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8889$$$https://pan.quark.cn/s/0fe46ed6eefc$$$https://drive.uc.cn/s/d83caf5d4fb74"
 }
 ```
 
@@ -92,7 +92,7 @@
 
 ### 链接格式示例
 ```
-百度网盘: https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8888
+百度网盘: https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8889
 夸克网盘: https://pan.quark.cn/s/0fe46ed6eefc
 UC网盘:   https://drive.uc.cn/s/d83caf5d4fb74
 ```
@@ -120,7 +120,7 @@ Links: 解析vod_down_url和vod_down_from字段
 model.Link{
     Type:     根据vod_down_from映射网盘类型
     URL:      从vod_down_url解析具体链接
-    Password: 从URL参数中提取密码（如?pwd=8888）
+    Password: 从URL参数中提取密码（如?pwd=8889）
 }
 ```
 

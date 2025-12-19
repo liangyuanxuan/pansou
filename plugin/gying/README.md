@@ -34,17 +34,17 @@ go build -o pansou main.go
 如果需要添加更多账户或管理现有账户，可以访问管理页面：
 
 ```
-http://localhost:8888/gying/你的用户名
+http://localhost:8889/gying/你的用户名
 ```
 
 **示例**：
 ```
-http://localhost:8888/gying/myusername
+http://localhost:8889/gying/myusername
 ```
 
 系统会自动：
 1. 根据用户名生成专属64位hash（不可逆）
-2. 重定向到专属管理页面：`http://localhost:8888/gying/{hash}`
+2. 重定向到专属管理页面：`http://localhost:8889/gying/{hash}`
 3. 显示登录表单供手动登录
 
 **📌 提示**：请收藏hash后的URL（包含你的专属hash），方便下次访问。
@@ -63,10 +63,10 @@ http://localhost:8888/gying/myusername
 
 ```bash
 # 通过API搜索
-curl "http://localhost:8888/api/search?kw=遮天"
+curl "http://localhost:8889/api/search?kw=遮天"
 
 # 只搜索插件（包括gying）
-curl "http://localhost:8888/api/search?kw=遮天&src=plugin"
+curl "http://localhost:8889/api/search?kw=遮天&src=plugin"
 ```
 
 ## 📡 API文档
@@ -100,7 +100,7 @@ Content-Type: application/json
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/gying/{hash}" \
+curl -X POST "http://localhost:8889/gying/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "get_status"}'
 ```
@@ -141,7 +141,7 @@ curl -X POST "http://localhost:8888/gying/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/gying/{hash}" \
+curl -X POST "http://localhost:8889/gying/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "login", "username": "xxx", "password": "xxx"}'
 ```
@@ -172,7 +172,7 @@ curl -X POST "http://localhost:8888/gying/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/gying/{hash}" \
+curl -X POST "http://localhost:8889/gying/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "logout"}'
 ```
@@ -194,7 +194,7 @@ curl -X POST "http://localhost:8888/gying/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/gying/{hash}" \
+curl -X POST "http://localhost:8889/gying/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "test_search", "keyword": "遮天"}'
 ```

@@ -105,7 +105,7 @@ https://1.star2.cn/ju/8737.html  (国剧类别)
                 <img src="/skin/images/kk.png" alt="夸克网盘">
                 <span>夸克网盘</span>
             </a>
-            <a class="dlipp-dl-btn j-wbdlbtn-dlipp" href="https://pan.baidu.com/s/1E92Hy50UxJnTTrU3qD9jqQ?pwd=8888" target="_blank">
+            <a class="dlipp-dl-btn j-wbdlbtn-dlipp" href="https://pan.baidu.com/s/1E92Hy50UxJnTTrU3qD9jqQ?pwd=8889" target="_blank">
                 <img src="/skin/images/bd.png" alt="百度网盘">
                 <span>百度网盘</span>
             </a>
@@ -116,7 +116,7 @@ https://1.star2.cn/ju/8737.html  (国剧类别)
 提取要素:
 - 网盘链接: .dlipp-cont-bd a.dlipp-dl-btn 的 href 属性
 - 网盘类型: 从链接URL自动识别 (quark.cn, baidu.com 等)
-- 提取码: 从URL参数中提取 (如 ?pwd=8888)
+- 提取码: 从URL参数中提取 (如 ?pwd=8889)
 ```
 
 ## CSS选择器总结

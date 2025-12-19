@@ -1,4 +1,4 @@
-port: 8080
+port: 8889
 default_channels:
   - "stable"
 default_concurrency: 10
@@ -16,7 +16,68 @@ optimize_memory: true #是否优化内存，如果未设置则默认启用
 plugin_timeout_seconds: 30 #获取插件超时时间（秒），如果未设置则使用默认值
 plugin_timeout: 30s
 async_plugin_enabled: true # 是否启用异步插件，如果未设置则默认启用
-# enabled_plugins:  #启用的具体插件列表 （空表示启用所有）
+enabled_plugins:  #启用的具体插件列表 （空表示启用所有）
+  - "labi"
+  - "zhizhen"
+  - "shandian"
+  - "duoduo"
+  - "muou"
+  - "wanou"
+  - "hunhepan"
+  - "jikepan"
+  - "panwiki"
+  - "pansearch"
+  - "panta"
+  - "qupansou"
+  - "hdr4k"
+  - "pan666"
+  - "susu"
+  - "thepiratebay"
+  - "xuexizhinan"
+  - "panyq"
+  - "ouge"
+  - "huban"
+  - "cyg"
+  - "erxiao"
+  - "miaoso"
+  - "fox4k"
+  - "pianku"
+  - "clmao"
+  - "wuji"
+  - "cldi"
+  - "xiaozhang"
+  - "libvio"
+  - "leijing"
+  - "xb6v"
+  - "xys"
+  - "ddys"
+  - "hdmoli"
+  - "yuhuage"
+  - "u3c3"
+  - "javdb"
+  - "clxiong"
+  - "jutoushe"
+  - "sdso"
+  - "xiaoji"
+  - "xdyh"
+  - "haisou"
+  - "bixin"
+  - "djgou"
+  - "nyaa"
+  - "xinjuc"
+  - "aikanzy"
+  - "qupanshe"
+  - "xdpan"
+  - "discourse"
+  - "yunsou"
+  - "qqpd"
+  - "ahhhhfs"
+  - "nsgame"
+  - "gying"
+  - "quark4k"
+  - "quarksoo"
+  - "sousou"
+  - "ash"
 async_response_timeout: 4 # 异步响应超时时间（秒）
 # async_response_timeout_dur:
 async_max_background_workers: 20 # 最大后台工作者数量，如果未设置则自动计算
@@ -27,7 +88,7 @@ http_read_timeout: 30s # HTTP读取超时
 http_write_timeout: 60s # HTTP写入超时
 http_idle_timeout: 120s # HTTP空闲超时
 http_max_conns: 100 # HTTP最大连接数
-auth_enabled: true  # 认证开关
+auth_enabled: false  # 认证开关
 auth_users: # 用户配置，格式：user1:pass1,user2:pass2
   admin: admin123
 auth_token_expiry: 24h # Token有效期（小时）

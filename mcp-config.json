@@ -6,7 +6,7 @@
         "C:\\full\\path\\to\\your\\project\\typescript\\dist\\index.js"
       ],
       "env": {
-        "PANSOU_SERVER_URL": "http://localhost:8888",
+        "PANSOU_SERVER_URL": "http://localhost:8889",
         "REQUEST_TIMEOUT": "60",
         "MAX_RESULTS": "50",
         "DEFAULT_CLOUD_TYPES": "baidu,aliyun,quark,tianyi,uc,mobile,115,pikpak,xunlei,123,magnet,ed2k,others",
@@ -34,7 +34,7 @@
       "环境变量覆盖": "可通过环境变量强制指定模式，如 DOCKER_MODE=true"
     },
     "配置说明": {
-      "PANSOU_SERVER_URL": "后端服务地址，默认http://localhost:8888",
+      "PANSOU_SERVER_URL": "后端服务地址，默认http://localhost:8889",
       "REQUEST_TIMEOUT": "请求超时时间（秒），默认30",
       "MAX_RESULTS": "最大搜索结果数，默认50",
       "DEFAULT_CLOUD_TYPES": "默认搜索的网盘类型，逗号分隔",

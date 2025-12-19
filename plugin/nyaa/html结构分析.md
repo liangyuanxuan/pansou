@@ -256,7 +256,7 @@ IdleConnTimeout:     90 * time.Second
 
 ### API请求
 ```bash
-curl "http://localhost:8888/api/search?kw=神墓&plugins=nyaa"
+curl "http://localhost:8889/api/search?kw=神墓&plugins=nyaa"
 ```
 
 ### 预期响应

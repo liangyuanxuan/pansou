@@ -48,7 +48,7 @@ PanSou MCP 服务设计为与 PanSou Go 后端服务分离，通过 HTTP API 进
 
 ### 部署步骤
 
-PanSou 后端服务通常运行在 `http://localhost:8888` (默认地址)。支持以下两种后端部署方式：
+PanSou 后端服务通常运行在 `http://localhost:8889` (默认地址)。支持以下两种后端部署方式：
 
 ## 后端服务部署
 
@@ -70,7 +70,7 @@ go build -o pansou.exe .
 .\pansou.exe
 ```
 
-服务默认将在 `http://localhost:8888` 启动。
+服务默认将在 `http://localhost:8889` 启动。
 
 ### 方式二：Docker 部署后端服务
 
@@ -88,12 +88,12 @@ docker-compose up -d
 docker ps
 
 # 验证服务是否正常运行
-curl http://localhost:8888/api/health
+curl http://localhost:8889/api/health
 ```
 
 ### 验证后端服务
 
-无论使用哪种方式启动后端服务，您都可以通过访问 `http://localhost:8888/api/health` 来检查服务状态，应该能看到类似以下的 JSON 响应：
+无论使用哪种方式启动后端服务，您都可以通过访问 `http://localhost:8889/api/health` 来检查服务状态，应该能看到类似以下的 JSON 响应：
 
 ```json
 {
@@ -138,7 +138,7 @@ npm run build
   node .\typescript\dist\index.js
   ```
 
-服务启动后，将默认尝试连接到 `http://localhost:8888` 的 PanSou 后端服务。
+服务启动后，将默认尝试连接到 `http://localhost:8889` 的 PanSou 后端服务。
 
 如果想要后端服务运行在不同的地址或端口上，需要通过环境变量指定：
 
@@ -171,7 +171,7 @@ node .\typescript\dist\index.js
         "C:\\full\\path\\to\\your\\project\\typescript\\dist\\index.js"
       ],
       "env": {
-        "PANSOU_SERVER_URL": "http://localhost:8888",
+        "PANSOU_SERVER_URL": "http://localhost:8889",
         "REQUEST_TIMEOUT": "30",
         "MAX_RESULTS": "50",
         "DEFAULT_CLOUD_TYPES": "baidu,aliyun,quark,tianyi,uc,mobile,115,pikpak,xunlei,123,magnet,ed2k,others",
@@ -230,10 +230,10 @@ node .\typescript\dist\index.js
 1. **检查服务状态**：
    ```bash
    # 检查健康状态
-   curl http://localhost:8888/api/health
+   curl http://localhost:8889/api/health
    
    # 或使用 PowerShell
-   Invoke-WebRequest -Uri "http://localhost:8888/api/health"
+   Invoke-WebRequest -Uri "http://localhost:8889/api/health"
    ```
 
 2. **Docker 部署问题**：
@@ -250,7 +250,7 @@ node .\typescript\dist\index.js
 
 3. **源码部署问题**：
    - 确认 Go 版本 >= 1.25.0
-   - 检查端口 8888 是否被占用
+   - 检查端口 8889 是否被占用
    - 确认防火墙设置
 
 4. **MCP 服务问题**：
@@ -306,7 +306,7 @@ MCP 服务通过工具调用接收参数。以下是主要工具及其支持的�
 
 | 环境变量               | 描述                                                       | 默认值                    |
 | :--------------------- | :--------------------------------------------------------- | :------------------------ |
-| `PANSOU_SERVER_URL`    | PanSou 后端服务的 URL 地址。                               | `http://localhost:8888`   |
+| `PANSOU_SERVER_URL`    | PanSou 后端服务的 URL 地址。                               | `http://localhost:8889`   |
 | `REQUEST_TIMEOUT`      | HTTP 请求超时时间（秒）。                                  | `30`                      |
 | `MAX_RESULTS`          | （内部使用，限制处理结果数量）                             | `100`                     |
 | `DEFAULT_CHANNELS`     | 默认搜索的 Telegram 频道列表（逗号分隔）。                 | `""` (使用后端默认)       |

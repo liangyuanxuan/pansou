@@ -245,6 +245,14 @@ func startServer() {
 	}
 
 	fmt.Println("服务器已安全关闭")
+
+	// 关闭数据库
+	sqlDB, _ := config.DB.DB()
+	err := sqlDB.Close()
+	if err != nil {
+		fmt.Println("数据库连接关闭失败")
+	}
+	fmt.Println("数据库连接关闭成功")
 }
 
 // printServiceInfo 打印服务信息

@@ -109,7 +109,7 @@ function formatErrorResult(errorMessage: string, serverUrl: string): string {
   
   output += `**配置说明**:\n`;
   output += `   可通过环境变量 PANSOU_SERVER_URL 配置服务地址\n`;
-  output += `   默认地址: http://localhost:8888\n`;
+  output += `   默认地址: http://localhost:8889\n`;
   
   return output;
 }

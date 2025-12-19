@@ -33,17 +33,17 @@ ENABLED_PLUGINS=qqpd ./pansou
 
 浏览器打开：
 ```
-http://localhost:8888/qqpd/你的QQ号
+http://localhost:8889/qqpd/你的QQ号
 ```
 
 **示例**：
 ```
-http://localhost:8888/qqpd/1234567
+http://localhost:8889/qqpd/1234567
 ```
 
 系统会自动：
 1. 根据QQ号生成专属64位hash（不可逆）
-2. 重定向到专属管理页面：`http://localhost:8888/qqpd/{hash}`
+2. 重定向到专属管理页面：`http://localhost:8889/qqpd/{hash}`
 3. 显示二维码供扫码登录
 
 **📌 提示**：请收藏hash后的URL（包含你的专属hash），方便下次访问。
@@ -77,10 +77,10 @@ m250319e25
 
 ```bash
 # 通过API搜索
-curl "http://localhost:8888/api/search?kw=遮天"
+curl "http://localhost:8889/api/search?kw=遮天"
 
 # 只搜索插件（包括qqpd）
-curl "http://localhost:8888/api/search?kw=遮天&src=plugin"
+curl "http://localhost:8889/api/search?kw=遮天&src=plugin"
 ```
 
 ## 📡 API文档
@@ -118,7 +118,7 @@ Content-Type: application/json
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "get_status"}'
 ```
@@ -168,7 +168,7 @@ curl -X POST "http://localhost:8888/qqpd/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "refresh_qrcode"}'
 ```
@@ -197,7 +197,7 @@ curl -X POST "http://localhost:8888/qqpd/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "check_login"}'
 ```
@@ -246,7 +246,7 @@ curl -X POST "http://localhost:8888/qqpd/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "logout"}'
 ```
@@ -270,7 +270,7 @@ curl -X POST "http://localhost:8888/qqpd/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{
     "action": "set_channels",
@@ -306,7 +306,7 @@ curl -X POST "http://localhost:8888/qqpd/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/qqpd/{hash}" \
+curl -X POST "http://localhost:8889/qqpd/{hash}" \
   -H "Content-Type: application/json" \
   -d '{
     "action": "test_search",

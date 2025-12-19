@@ -34,17 +34,17 @@ ENABLED_PLUGINS=weibo ./pansou
 
 浏览器打开：
 ```
-http://localhost:8888/weibo/你的微博用户名
+http://localhost:8889/weibo/你的微博用户名
 ```
 
 **示例**：
 ```
-http://localhost:8888/weibo/pansou123
+http://localhost:8889/weibo/pansou123
 ```
 
 系统会自动：
 1. 根据用户名生成专属64位hash（不可逆）
-2. 重定向到专属管理页面：`http://localhost:8888/weibo/{hash}`
+2. 重定向到专属管理页面：`http://localhost:8889/weibo/{hash}`
 3. 显示二维码供扫码登录
 
 **📌 提示**：请收藏hash后的URL（包含你的专属hash），方便下次访问。
@@ -83,10 +83,10 @@ http://localhost:8888/weibo/pansou123
 
 ```bash
 # 通过API搜索
-curl "http://localhost:8888/api/search?kw=唐朝诡事录"
+curl "http://localhost:8889/api/search?kw=唐朝诡事录"
 
 # 只搜索插件（包括weibo）
-curl "http://localhost:8888/api/search?kw=唐朝诡事录&src=plugin"
+curl "http://localhost:8889/api/search?kw=唐朝诡事录&src=plugin"
 ```
 
 ## 📡 API文档
@@ -124,7 +124,7 @@ Content-Type: application/json
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "get_status"}'
 ```
@@ -174,7 +174,7 @@ curl -X POST "http://localhost:8888/weibo/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "refresh_qrcode"}'
 ```
@@ -202,7 +202,7 @@ curl -X POST "http://localhost:8888/weibo/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "check_login"}'
 ```
@@ -251,7 +251,7 @@ curl -X POST "http://localhost:8888/weibo/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{"action": "logout"}'
 ```
@@ -275,7 +275,7 @@ curl -X POST "http://localhost:8888/weibo/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{
     "action": "set_users",
@@ -309,7 +309,7 @@ curl -X POST "http://localhost:8888/weibo/{hash}" \
 
 **请求**：
 ```bash
-curl -X POST "http://localhost:8888/weibo/{hash}" \
+curl -X POST "http://localhost:8889/weibo/{hash}" \
   -H "Content-Type: application/json" \
   -d '{
     "action": "test_search",

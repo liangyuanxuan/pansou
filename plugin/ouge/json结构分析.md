@@ -37,7 +37,7 @@
     
     // 关键字段：下载链接相关
     "vod_down_from": "bd$$$KG$$$UC",    // 下载源标识（$$$分隔）
-    "vod_down_url": "https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8888$$$https://pan.quark.cn/s/0fe46ed6eefc$$$https://drive.uc.cn/s/d83caf5d4fb74"
+    "vod_down_url": "https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8889$$$https://pan.quark.cn/s/0fe46ed6eefc$$$https://drive.uc.cn/s/d83caf5d4fb74"
 }
 ```
 
@@ -68,7 +68,7 @@
 
 ### 链接格式示例
 ```
-百度网盘: https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8888
+百度网盘: https://pan.baidu.com/s/13milLJZV5_7DCzGDQu-fcA?pwd=8889
 夸克网盘: https://pan.quark.cn/s/0fe46ed6eefc
 UC网盘: https://drive.uc.cn/s/d83caf5d4fb74
 ```

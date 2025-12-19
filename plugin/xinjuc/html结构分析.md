@@ -303,7 +303,7 @@ result.Channel = ""  // 插件搜索结果必须为空字符串
 
 ### API请求
 ```bash
-curl "http://localhost:8888/api/search?kw=凡人修仙传&plugins=xinjuc"
+curl "http://localhost:8889/api/search?kw=凡人修仙传&plugins=xinjuc"
 ```
 
 ### 预期响应

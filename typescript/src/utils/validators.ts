@@ -37,7 +37,7 @@ export type ResultType = typeof RESULT_TYPES[number];
  * 配置验证模式
  */
 export const ConfigSchema = z.object({
-  serverUrl: z.string().url().default('http://localhost:8888'),
+  serverUrl: z.string().url().default('http://localhost:8889'),
   requestTimeout: z.number().positive().default(30000),
   maxResults: z.number().positive().default(100),
   maxConcurrentRequests: z.number().positive().default(5),
