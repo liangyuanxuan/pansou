@@ -4,10 +4,10 @@ import (
 	"bytes"
 	"compress/gzip"
 	"io/ioutil"
-	"strings"
-	
-	"github.com/gin-gonic/gin"
 	"pansou/config"
+	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 // 压缩响应的包装器
@@ -32,41 +32,41 @@ func (g *gzipResponseWriter) Close() {
 }
 
 // GzipMiddleware 返回一个Gin中间件，用于压缩HTTP响应
-func GzipMiddleware() gin.HandlerFunc {
+/*func GzipMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		// 如果未启用压缩，直接跳过
 		if !config.AppConfig.EnableCompression {
 			c.Next()
 			return
 		}
-		
+
 		// 检查客户端是否支持gzip
 		if !strings.Contains(c.Request.Header.Get("Accept-Encoding"), "gzip") {
 			c.Next()
 			return
 		}
-		
+
 		// 创建一个缓冲响应写入器
 		buffer := &bytes.Buffer{}
 		blw := &bodyLogWriter{body: buffer, ResponseWriter: c.Writer}
 		c.Writer = blw
-		
+
 		// 处理请求
 		c.Next()
-		
+
 		// 获取响应内容
 		responseData := buffer.Bytes()
-		
+
 		// 如果响应大小小于最小压缩大小，直接返回原始内容
 		if len(responseData) < config.AppConfig.MinSizeToCompress {
-			c.Writer.Write(responseData)
+			// c.Writer.Write(responseData) //重复写入了
 			return
 		}
-		
+
 		// 设置gzip响应头
 		c.Header("Content-Encoding", "gzip")
 		c.Header("Vary", "Accept-Encoding")
-		
+
 		// 创建gzip写入器
 		gz, err := gzip.NewWriterLevel(c.Writer, gzip.BestSpeed)
 		if err != nil {
@@ -74,10 +74,64 @@ func GzipMiddleware() gin.HandlerFunc {
 			return
 		}
 		defer gz.Close()
-		
+
 		// 写入压缩内容
 		gz.Write(responseData)
 	}
+}*/
+// 创建自定义Writer
+type gzipWriter struct {
+	gin.ResponseWriter
+	writer *gzip.Writer
+	buf    bytes.Buffer
+}
+
+// 正确的压缩中间件实现
+func GzipMiddleware() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		// 跳过某些路径
+		/*if c.Request.URL.Path == "/api/health" {
+			c.Next()
+			return
+		}*/
+
+		// 检查客户端是否支持gzip
+		acceptEncoding := c.Request.Header.Get("Accept-Encoding")
+		if !strings.Contains(acceptEncoding, "gzip") {
+			c.Next()
+			return
+		}
+
+		// 替换Writer
+		originalWriter := c.Writer
+		gz := &gzipWriter{
+			ResponseWriter: originalWriter,
+		}
+		c.Writer = gz
+
+		// 处理请求
+		c.Next()
+
+		// 如果响应大小小于阈值，直接返回
+		if gz.buf.Len() < config.AppConfig.MinSizeToCompress {
+			originalWriter.Write(gz.buf.Bytes())
+			return
+		}
+
+		// 压缩数据
+		c.Writer.Header().Set("Content-Encoding", "gzip")
+		var compressedBuf bytes.Buffer
+		gzipWriter := gzip.NewWriter(&compressedBuf)
+		gzipWriter.Write(gz.buf.Bytes())
+		gzipWriter.Close()
+
+		originalWriter.Write(compressedBuf.Bytes())
+	}
+}
+
+// 重写Write方法
+func (g *gzipWriter) Write(data []byte) (int, error) {
+	return g.buf.Write(data)
 }
 
 // bodyLogWriter 是一个用于记录响应体的写入器
@@ -101,23 +155,23 @@ func (w bodyLogWriter) WriteString(s string) (int, error) {
 // CompressData 压缩数据
 func CompressData(data []byte) ([]byte, error) {
 	var buf bytes.Buffer
-	
+
 	// 创建gzip写入器
 	gz, err := gzip.NewWriterLevel(&buf, gzip.BestSpeed)
 	if err != nil {
 		return nil, err
 	}
-	
+
 	// 写入数据
 	if _, err := gz.Write(data); err != nil {
 		return nil, err
 	}
-	
+
 	// 关闭写入器
 	if err := gz.Close(); err != nil {
 		return nil, err
 	}
-	
+
 	return buf.Bytes(), nil
 }
 
@@ -129,7 +183,7 @@ func DecompressData(data []byte) ([]byte, error) {
 		return nil, err
 	}
 	defer gz.Close()
-	
+
 	// 读取解压后的数据
 	return ioutil.ReadAll(gz)
-} 
+}
