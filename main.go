@@ -22,6 +22,7 @@ import (
 	"pansou/service"
 	"pansou/util"
 	"pansou/util/cache"
+	"pansou/util/elasticsearch"
 
 	_ "pansou/plugin/ahhhhfs"
 	_ "pansou/plugin/aikanzy"
@@ -117,8 +118,34 @@ func initApp() {
 	// 初始化配置
 	config.Init()
 
+	// 执行数据库迁移
+	if err := util.MigrateDatabase(); err != nil {
+		log.Fatalf("数据库迁移失败: %v", err)
+	}
+
+	// 创建数据库索引（可选，如果失败不影响启动）
+	/*if err := util.CreateIndexes(); err != nil {
+		log.Printf("⚠️ 创建索引失败: %v", err)
+	}*/
+
 	// 初始化HTTP客户端
 	util.InitHTTPClient()
+
+	// 初始化Elasticsearch（如果启用）
+	if config.AppConfig.ESEnabled {
+		if err := elasticsearch.InitESClient(config.AppConfig); err != nil {
+			log.Printf("⚠️  Elasticsearch初始化失败: %v (将继续使用本地缓存)", err)
+		} else {
+			// 初始化ES索引
+			if err := elasticsearch.InitIndices(); err != nil {
+				log.Printf("⚠️  Elasticsearch索引初始化失败: %v", err)
+			} else {
+				fmt.Println("✅ Elasticsearch已成功初始化")
+				// 启动定期清理任务（每小时清理一次过期缓存）
+				elasticsearch.StartCleanupJob(1 * time.Hour)
+			}
+		}
+	}
 
 	// 初始化缓存写入管理器
 	var err error
@@ -308,6 +335,15 @@ func printServiceInfo(port string, pluginManager *plugin.PluginManager) {
 			config.AppConfig.CacheTTLMinutes)
 	} else {
 		fmt.Println("缓存已禁用")
+	}
+
+	// 输出Elasticsearch信息
+	if config.AppConfig.ESEnabled {
+		if elasticsearch.IsEnabled() {
+			fmt.Printf("✅ Elasticsearch已启用: %s\n", strings.Join(config.AppConfig.ESAddresses, ", "))
+		} else {
+			fmt.Println("⚠️  Elasticsearch配置已启用但连接失败，使用本地缓存")
+		}
 	}
 
 	// 输出压缩信息

@@ -30,6 +30,11 @@ type Config struct {
 	CachePath       string `yaml:"cache_path"`
 	CacheMaxSizeMB  int    `yaml:"cache_max_size_mb"`
 	CacheTTLMinutes int    `yaml:"cache_ttl_minutes"`
+	// Elasticsearch配置
+	ESEnabled   bool     `yaml:"es_enabled"`   // 是否启用ES
+	ESAddresses []string `yaml:"es_addresses"` // ES集群地址
+	ESUsername  string   `yaml:"es_username"`  // ES用户名
+	ESPassword  string   `yaml:"es_password"`  // ES密码
 	// 压缩相关配置
 	EnableCompression bool `yaml:"enable_compression"`
 	MinSizeToCompress int  `yaml:"min_size_to_compress"` // 最小压缩大小（字节）

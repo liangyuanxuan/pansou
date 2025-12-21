@@ -9,6 +9,12 @@ cache_enabled: true
 cache_path: "./cache" # 缓存路径
 cache_max_size_mb: 512
 cache_ttl_minutes: 60
+# Elasticsearch配置
+es_enabled: false # 是否启用ES缓存，默认false
+es_addresses: # ES集群地址列表
+  - "http://localhost:9200"
+es_username: "" # ES用户名（可选）
+es_password: "" # ES密码（可选）
 enable_compression: true # 启用压缩，如果未设置则默认禁用
 min_size_to_compress: 1024 # 最小压缩大小
 gc_percent: 50 #GC百分比
